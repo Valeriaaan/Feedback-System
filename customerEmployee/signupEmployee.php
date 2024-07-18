@@ -10,13 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirmPassword'];
 
-    // Validate inputs
     if (empty($employeeID) || empty($department) || empty($password) || empty($confirmPassword)) {
         $error = "All fields are required.";
     } elseif ($password !== $confirmPassword) {
         $error = "Passwords do not match.";
     } else {
-        // Check if employeeID already exists
         $check_stmt = $conn->prepare("SELECT employeeID FROM employee WHERE employeeID = ?");
         $check_stmt->bind_param("s", $employeeID);
         $check_stmt->execute();
@@ -25,12 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($check_stmt->num_rows > 0) {
             $error = "Employee ID already exists. Please choose a different one.";
         } else {
-            // Insert new employee
+            // Hash the password before storing it
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            
             $insert_stmt = $conn->prepare("INSERT INTO employee (employeeID, department, password) VALUES (?, ?, ?)");
-            $insert_stmt->bind_param("sss", $employeeID, $department, $password);
+            $insert_stmt->bind_param("sss", $employeeID, $department, $hashedPassword);
 
             if ($insert_stmt->execute()) {
-                // Return success message in JSON format
                 echo json_encode(['success' => true]);
             } else {
                 echo json_encode(['success' => false, 'error' => 'Error in registering. Please try again later.']);

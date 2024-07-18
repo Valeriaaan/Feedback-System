@@ -43,46 +43,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                         <ul class="list-group select-office">
                             <li class="list-group-item">
-                                <input type="radio" id="admission" name="office" class="form-check-input me-2">
+                                <input type="radio" id="admission" value="Admission Office" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="admission">Admission Office</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="registrar" name="office" class="form-check-input me-2">
+                                <input type="radio" id="registrar" value="Registrar Office" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="registrar">Registrar Office</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="guidance" name="office" class="form-check-input me-2">
+                                <input type="radio" id="guidance" value="Guidance Office" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="guidance">Guidance Office</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="health" name="office" class="form-check-input me-2">
+                                <input type="radio" id="health" value="Health Service Office" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="health">Health Service Office</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="library" name="office" class="form-check-input me-2">
+                                <input type="radio" id="library" value="Library" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="library">Library</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="canteen" name="office" class="form-check-input me-2">
+                                <input type="radio" id="canteen" value="Canteen (Food Service)" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="canteen">Canteen (Food Service)</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="publication" name="office" class="form-check-input me-2">
+                                <input type="radio" id="publication" value="Student Publication" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="publication">Student Publication</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="scholarship" name="office" class="form-check-input me-2">
+                                <input type="radio" id="scholarship" value="Scholarship Programs" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="scholarship">Scholarship Programs</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="organization" name="office" class="form-check-input me-2">
+                                <input type="radio" id="organization" value="Student Organization" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="organization">Student Organization</label>
                             </li>
                             <li class="list-group-item">
-                                <input type="radio" id="sports" name="office" class="form-check-input me-2">
+                                <input type="radio" id="sports" value="Sport and Cultural Services" name="office" class="form-check-input me-2">
                                 <label class="form-check-label" for="sports">Sport and Cultural Services</label>
                             </li>
                         </ul>
+
                     </div>
                 </div>
             </div>

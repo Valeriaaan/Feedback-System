@@ -8,23 +8,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $employeeID = $_POST['username'];
     $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT employeeID, department FROM employee WHERE employeeID = ? AND password = ?");
-    $stmt->bind_param("ss", $employeeID, $password);
-
+    $stmt = $conn->prepare("SELECT employeeID, department, password FROM employee WHERE employeeID = ?");
+    $stmt->bind_param("s", $employeeID);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($employeeID, $department);
+        $stmt->bind_result($employeeID, $department, $hashedPassword);
         $stmt->fetch();
 
-        $_SESSION['ID'] = $employeeID;
-        $_SESSION['department'] = $department;
-        
-        header("Location: ../evaluationAdmissionOffice/instruction.php"); // Redirect to dashboard or home page after login
-        exit();
+        if (password_verify($password, $hashedPassword)) {
+            $_SESSION['ID'] = $employeeID;
+            $_SESSION['department'] = $department;
+            
+            header("Location: ../evaluationAdmissionOffice/instruction.php"); 
+            exit();
+        } else {
+            $error = "Invalid password.";
+        }
     } else {
-        $error = "Invalid department or password.";
+        $error = "Employee ID not found.";
     }
 
     $stmt->close();
@@ -79,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="d-grid gap-2">
                             <button class="btn btn-red w-100" type="submit">Login</button>
                             <a href="signupEmployee.php">
-                                <button class="btn btn-outline-secondary  w-100" type="button">Back</button>
+                                <button class="btn btn-outline-secondary w-100" type="button">Back</button>
                             </a>
                         </div>
                     </form>

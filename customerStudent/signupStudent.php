@@ -25,9 +25,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($check_stmt->num_rows > 0) {
             $error = "Student ID already exists. Please choose a different one.";
         } else {
+            // Encrypt the password
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
             // Insert new student
             $insert_stmt = $conn->prepare("INSERT INTO student (studentID, department, password) VALUES (?, ?, ?)");
-            $insert_stmt->bind_param("sss", $studentID, $department, $password);
+            $insert_stmt->bind_param("sss", $studentID, $department, $hashedPassword);
 
             if ($insert_stmt->execute()) {
                 // Return success message in JSON format
@@ -49,7 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
-
 <body class="d-flex flex-column min-vh-100">
     <?php include '../templates/header.php'; ?>
 
@@ -69,7 +70,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
                 <div class="card p-4">
-
                     <?php if ($error != ''): ?>
                     <div class="alert alert-danger" role="alert">
                         <?php echo $error; ?>
@@ -207,5 +207,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
 </body>
-
 </html>
