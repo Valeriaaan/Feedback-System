@@ -20,6 +20,7 @@
                 <h4 class="text-center my-2">ADMIN</h4>
                 <div class="list-group">
                     <a href="dashboard.php" class="list-group-item list-group-item-action"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="customerFeedbacks.php" class="list-group-item list-group-item-action"><i class="fas fa-comment"></i> Feedbacks</a>
                     <a href="printReport.php" class="list-group-item list-group-item-action"><i class="fas fa-print"></i> Print Reports</a>
                     <a href="settings.php" class="list-group-item list-group-item-action active"><i class="fas fa-cog"></i> Settings</a>
                 </div>

@@ -19,6 +19,7 @@
                 <h4 class="text-center my-2">ADMIN</h4>
                 <div class="list-group">
                     <a href="dashboard.php" class="list-group-item list-group-item-action active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                    <a href="customerFeedbacks.php" class="list-group-item list-group-item-action"><i class="fas fa-comment"></i> Feedbacks</a>
                     <a href="printReport.php" class="list-group-item list-group-item-action"><i class="fas fa-print"></i> Print Reports</a>
                     <a href="settings.php" class="list-group-item list-group-item-action"><i class="fas fa-cog"></i> Settings</a>
                     <a href="#" id="logoutLink" class="list-group-item list-group-item-action"><i class="fas fa-sign-out"></i> Logout</a>
@@ -67,7 +68,7 @@
                             </div>
                         </div>
 
-                        <div class="card mb-4" >
+                        <div class="card mb-4">
                             <div class="card-body">
                                 <h4>Quantitative Result</h4>
                                 <canvas id="barChart"></canvas>
@@ -106,8 +107,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.1/wordcloud2.min.js" integrity="sha512-V9GoXkVO7MfITOYkagdEaqowj4FJtxO7SLhX38OHNBCDnQOGeNiFVveH/hGXWvWVEp7UhAXIa3mDsn6APywNvg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <script>
-        // Function to handle dropdown selection and update displayed text
         function updateDropdownText(selector, dropdownId) {
             const items = document.querySelectorAll(selector);
             items.forEach(item => {
@@ -118,10 +119,17 @@
             });
         }
 
-        // Update dropdown text when an item is selected
         updateDropdownText('.office-select', 'officeDropdown');
         updateDropdownText('.semester-select', 'semesterDropdown');
         updateDropdownText('.year-select', 'yearDropdown');
+
+        // Word cloud
+        fetch('getWordCloudData.php')
+            .then(response => response.json())
+            .then(wordList => {
+                WordCloud(document.getElementById('wordCloudContainer'), { list: wordList, width: 400, height: 400 });
+            })
+            .catch(error => console.error('Error fetching word cloud data:', error));
 
         // Bar Chart
         var ctxBar = document.getElementById('barChart').getContext('2d');
@@ -199,27 +207,6 @@
                 }]
             }
         });
-
-        // Word Cloud
-        var wordList = [
-            ['Feedback', "22"],
-            ['Customer', "25"],
-            ['Service', "19"],
-            ['Satisfaction', "17"],
-            ['Support', "17"],
-            ['Quality', "24"],
-            ['Efficiency', "33"],
-            ['Experience', "28"],
-            ['Response', "12"],
-            ['Communication', "19"],
-            ['Good', "24"],
-            ['Great', "26"],
-            ['Better', "30"],
-            ['Poor', "13"],
-            ['Excellent', "16"],
-            ['Best', "16"]
-        ];
-        WordCloud(document.getElementById('wordCloudContainer'), { list: wordList, width: 200, height: 200 });
 
         // Logout Confirmation
         document.getElementById('logoutLink').addEventListener('click', function(event) {
