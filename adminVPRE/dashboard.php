@@ -1,3 +1,60 @@
+<?php
+session_start();
+include("../connect.php");
+
+$query = "SELECT COUNT(*) as total_feedbacks FROM evaluation";
+$result = $conn->query($query);
+
+$total_feedbacks = 0;
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $total_feedbacks = $row['total_feedbacks'];
+}
+
+function countOccurrences($conn, $numbers) {
+    $columns = ['q1', 'q2', 'q3', 'q4', 'q5'];
+    $counts = [];
+
+    foreach ($numbers as $number) {
+        $count = 0;
+        foreach ($columns as $column) {
+            $query = "SELECT COUNT(*) as count FROM evaluation WHERE $column = $number";
+            $result = $conn->query($query);
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $count += $row['count'];
+            }
+        }
+        $counts[$number] = $count;
+    }
+
+    return $counts;
+}
+
+function countEvaluatorID($conn, $table, $column) {
+    $query = "SELECT COUNT(*) as count FROM evaluation WHERE evaluatorID IN (SELECT $column FROM $table)";
+    $result = $conn->query($query);
+    $count = 0;
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $count = $row['count'];
+    }
+    return $count;
+}
+
+$others_count = 0;
+$employee_count = countEvaluatorID($conn, 'employee', 'employeeID');
+$student_count = countEvaluatorID($conn, 'student', 'studentID');
+
+$countsNo1 = countOccurrences($conn, [1]);
+$countsNo2 = countOccurrences($conn, [2]);
+$countsNo3 = countOccurrences($conn, [3]);
+$countsNo4 = countOccurrences($conn, [4]);
+$countsNo5 = countOccurrences($conn, [5]);
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -79,7 +136,7 @@
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-body text-center">
-                                <h1 class="">201, 435</h1>
+                                <h1 class=""><?php echo $total_feedbacks; ?></h1>
                                 <h5>Total Feedback</h5>
                             </div>
                         </div>
@@ -140,35 +197,35 @@
                 datasets: [
                     {
                         label: 'Very Dissatisfied',
-                        data: [120],
-                        backgroundColor: 'rgba(220, 53, 69, 0.2)', // Needs Improvement - red
-                        borderColor: 'rgba(220, 53, 69, 1)', // Needs Improvement - red
+                        data: [<?php foreach ($countsNo1 as $number => $count): ?> <?php echo $count; ?> <?php endforeach; ?>],
+                        backgroundColor: 'rgba(220, 53, 69, 0.2)', 
+                        borderColor: 'rgba(220, 53, 69, 1)', 
                         borderWidth: 1
                     },
                     {
                         label: 'Dissatisfied',
-                        data: [190],
-                        backgroundColor: 'rgba(255, 159, 64, 0.2)', // Failed to meet expectation - orange
-                        borderColor: 'rgba(255, 159, 64, 1)', // Failed to meet expectation - orange
+                        data: [<?php foreach ($countsNo2 as $number => $count): ?> <?php echo $count; ?> <?php endforeach; ?>],
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)', 
+                        borderColor: 'rgba(255, 159, 64, 1)', 
                         borderWidth: 1
                     },
                     {
                         label: 'Neutral',
-                        data: [230],
-                        backgroundColor: 'rgba(255, 205, 86, 0.2)', // Meets Expectations - yellow
-                        borderColor: 'rgba(255, 205, 86, 1)', // Meets Expectations - yellow
+                        data: [<?php foreach ($countsNo3 as $number => $count): ?> <?php echo $count; ?> <?php endforeach; ?>],
+                        backgroundColor: 'rgba(255, 205, 86, 0.2)', 
+                        borderColor: 'rgba(255, 205, 86, 1)', 
                         borderWidth: 1
                     },
                     {
                         label: 'Satisfied',
-                        data: [205],
+                        data: [<?php foreach ($countsNo4 as $number => $count): ?> <?php echo $count; ?> <?php endforeach; ?>],
                         backgroundColor: 'rgba(142, 196, 65, 0.2)', // Exceed expectation - yellow-green
                         borderColor: 'rgba(142, 196, 65, 1)', // Exceed expectation - yellow-green
                         borderWidth: 1
                     },
                     {
                         label: 'Very Satisfied',
-                        data: [190],
+                        data: [<?php foreach ($countsNo5 as $number => $count): ?> <?php echo $count; ?> <?php endforeach; ?>],
                         backgroundColor: 'rgba(40, 167, 69, 0.2)', // Outstanding - green
                         borderColor: 'rgba(40, 167, 69, 1)', // Outstanding - green
                         borderWidth: 1
@@ -192,7 +249,7 @@
                 labels: ['Student', 'Employee', 'Other'],
                 datasets: [{
                     label: 'Colors',
-                    data: [120, 190, 300, ],
+                    data: [<?php echo $student_count; ?>, <?php echo $employee_count; ?>, <?php echo $others_count; ?>,],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
